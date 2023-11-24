@@ -28,6 +28,7 @@ app.use("/api/friend_requests", accessTokenValidate, friendRequestsRoutes);
 app.use("/api/friends_list", accessTokenValidate, friendsListRoutes);
 app.use("/api/geolocation", accessTokenValidate, geolocationRoutes);
 
+
 app.use((req: Request, res: Response, next: NextFunction) => {
   // next(Error("Endpoint not found"));
   next(createHttpError(404, "Endpoint not found"));
