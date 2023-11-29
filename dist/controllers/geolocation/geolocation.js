@@ -26,8 +26,8 @@ const getGeolocation = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
             });
         }
         user_id = new mongoose_1.default.Types.ObjectId(user_id);
-        const geolocation = yield geolocation_1.default.findById({
-            _id: user_id,
+        const geolocation = yield geolocation_1.default.findOne({
+            user_id,
         }).exec();
         res.status(200).json({
             result: true,
@@ -65,12 +65,14 @@ const createGeolocation = (req, res, next) => __awaiter(void 0, void 0, void 0, 
                 data: createGeolocation,
             });
         }
-        const newGeolocation = yield geolocation_1.default.findOneAndUpdate({ user_id }, { lat, lon, updateAt: (0, utils_1.getUTC7Isodate)() }, { new: true }).exec();
-        res.status(200).json({
-            result: true,
-            msg: "Update Geolocation",
-            data: newGeolocation,
-        });
+        else {
+            const newGeolocation = yield geolocation_1.default.findOneAndUpdate({ user_id }, { lat, lon, updateAt: (0, utils_1.getUTC7Isodate)() }, { new: true }).exec();
+            res.status(200).json({
+                result: true,
+                msg: "Update Geolocation",
+                data: newGeolocation,
+            });
+        }
     }
     catch (error) {
         next(error);

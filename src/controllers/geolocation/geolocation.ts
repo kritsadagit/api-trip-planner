@@ -31,8 +31,8 @@ export const getGeolocation: RequestHandler<
 
     user_id = new mongoose.Types.ObjectId(user_id);
 
-    const geolocation = await GeolocationModel.findById({
-      _id: user_id,
+    const geolocation = await GeolocationModel.findOne({
+      user_id,
     }).exec();
 
     res.status(200).json({
@@ -78,19 +78,19 @@ export const createGeolocation: RequestHandler<
         msg: "Created Geolocation",
         data: createGeolocation,
       });
+    } else {
+      const newGeolocation = await GeolocationModel.findOneAndUpdate(
+        { user_id },
+        { lat, lon, updateAt: getUTC7Isodate() },
+        { new: true }
+      ).exec();
+
+      res.status(200).json({
+        result: true,
+        msg: "Update Geolocation",
+        data: newGeolocation,
+      });
     }
-
-    const newGeolocation = await GeolocationModel.findOneAndUpdate(
-      { user_id },
-      { lat, lon, updateAt: getUTC7Isodate() },
-      { new: true }
-    ).exec();
-
-    res.status(200).json({
-      result: true,
-      msg: "Update Geolocation",
-      data: newGeolocation,
-    });
   } catch (error) {
     next(error);
   }
